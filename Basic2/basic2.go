@@ -3,10 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"sort"
-
-	// "strings"
 	"time"
 )
 
@@ -20,7 +19,9 @@ func main() {
 	// slicesBehaviour()
 	// mapsBehaviour()
 	// structsBehave()
-	gotoStatements()
+	// gotoStatements()
+	// fileHandling()
+	exploringOs()
 }
 
 
@@ -47,8 +48,6 @@ func formatDate(){
 
 
 }
-
-
 // Build command
 //  rahulroxx@omarchian ~/..../Basic2  main  GOOS="darwin" go build 
 //  rahulroxx@omarchian ~/..../Basic2  main  go build        
@@ -127,25 +126,25 @@ func mapsBehaviour() {
 	maps["GO"] = "GOlang"
 
 	for key , val := range maps {
+		if key == "JS"{
+			defer fmt.Println("Key: ",key,"Val: ", val)
+			continue
+		}
 		fmt.Println("Key: ",key,"Val: ", val)
 
 	}
 }
 
-
-type User struct {
-	Name string
-	Age uint
-	Email string
-
-}
 func structsBehave() {
 rahulroxx := User{"Rahul",12,"rahul@email"}
-
+rahulroxx.getEmail()
 fmt.Printf("The values in details are: %+v\n", rahulroxx)
+
+rahulroxx = rahulroxx.randomizeValues()
+fmt.Printf("The values in details are: %+v\n", rahulroxx)
+
 	
 }
-
 
 func gotoStatements() {
 	rougueValue := 1
@@ -166,4 +165,74 @@ roxx:
 
 }
 
-// continue from the functions
+type User struct {
+	Name string
+	Age uint
+	Email string
+
+}
+
+func (u User) getEmail() {
+	fmt.Println("This is the required Email: ",u.Email)
+}
+
+func (u User) randomizeValues() User{
+	u.Age += 10
+	u.getEmail()
+	u.Email = "New@gmail.com"
+	u.Name = "Rahul"
+	return u
+}
+
+
+
+func fileHandling() {
+	// create a txt
+	file,err := os.Create("./Hello.txt")
+	if err != nil {
+		panic(err)
+	}
+	content := "This is a content written to the file, Hello File."
+	length , err := io.WriteString(file,content)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Length of the file: ",length)
+	defer file.Close()
+	readFile("./Hello.txt")
+}
+
+func readFile(file string){
+	contentByte , err := os.ReadFile(file)
+		if err != nil {
+		panic(err)
+	}
+	fmt.Println("Conetnt: ",string(contentByte))
+	
+	// return  content 
+}
+
+func exploringOs()  {
+	mkdir := os.Mkdir("test",0755)
+	if mkdir != nil {
+		fmt.Println("Erro:",mkdir)
+	}
+	chdir:= os.Chdir("./test")
+	if chdir != nil {
+		fmt.Println("Erro:",chdir)
+	}
+	file , err:= os.Create("./Testting.txt")
+	if err != nil {
+		fmt.Println("Erro:",err)
+	}
+	text := ("This is is a testing File i created by first creating a folder named test\nthen i changed the directory to test and created and writing in thisn file ")
+	length , err := io.WriteString(file,text)
+	if err != nil {
+		fmt.Println("Erro:",err)
+	}
+	fmt.Println("Length: ",length)
+	// Because we changed the directory that is why giving the filename directly works  
+	defer readFile("./Testting.txt")
+}
