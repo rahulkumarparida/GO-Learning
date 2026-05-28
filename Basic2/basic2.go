@@ -236,3 +236,4 @@ func exploringOs()  {
 	// Because we changed the directory that is why giving the filename directly works  
 	defer readFile("./Testting.txt")
 }
+
