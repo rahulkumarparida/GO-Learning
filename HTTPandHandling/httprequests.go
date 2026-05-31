@@ -13,7 +13,8 @@ const URL = "https://github.com:5000/rahulkumarparida?tab=repositories"
 
 func main()  {
 	// webrequest()
-	exploreResponse()
+	// exploreResponse()
+	postFomData()
 
 
 }
@@ -91,3 +92,21 @@ func exploreResponse(){
 	 
 
 }
+
+
+
+func postFomData(){
+	Url :="http://localhost:8000/formData"
+	data := url.Values{}
+	data.Add("name","Rahul")
+	data.Add("mental health","deterioting")
+	data.Add("doing","Nothing")
+
+	res ,_:= http.PostForm(Url,data)	
+	defer res.Body.Close()
+
+	content , _ := io.ReadAll(res.Body)
+	fmt.Println("res:", string(content))
+
+}
+
