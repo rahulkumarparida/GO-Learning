@@ -13,12 +13,12 @@ func main()  {
 
 	router := mux.NewRouter()
 	
-	router.HandleFunc("/",serveHome).Methods("GET")
-	router.HandleFunc("/home",greetpage.HomeFile).Methods("GET")
+	// router.HandleFunc("/",serveHome).Methods("GET")
+	router.HandleFunc("/",greetpage.HomeFile).Methods("GET")
 
 	fmt.Println("Listening at :6969")	
 	log.Fatal(http.ListenAndServe(":6969",router))
-
+													
 
 
 }

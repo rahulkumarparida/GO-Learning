@@ -103,10 +103,10 @@ func postFomData(){
 	data.Add("doing","Nothing")
 
 	res ,_:= http.PostForm(Url,data)	
-	defer res.Body.Close()
-
+	
 	content , _ := io.ReadAll(res.Body)
 	fmt.Println("res:", string(content))
+	defer res.Body.Close()	
 
 }
 
