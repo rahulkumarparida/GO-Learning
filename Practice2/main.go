@@ -43,7 +43,11 @@ func main(){
 
 	// resultChannel()
 
-	bankAccount()
+	// bankAccount()
+
+	// visitorCounter()
+
+	restrauntOrders()
 
 }
 
@@ -139,7 +143,6 @@ func resultChannel(){
 	}
 }
 
-
 func deposit(cash int) int{
 	fmt.Println("Cash Deposit: " , cash)
 	return  cash+100
@@ -162,8 +165,61 @@ func bankAccount(){
 		
 	wg.Wait()	
 	fmt.Println("Total: ", currAmount)
+
+}
+
+
+
+func visitorCounter(){
+	wg := sync.WaitGroup{}
+	mu := sync.Mutex{}
+	start := time.Now()
+	counter := 0
+	for i:=0;i < 100;i++{
+
+		wg.Add(1)
+		go func(){
+			defer wg.Done()					
+			// time.Sleep(30*time.Millisecond)
+			mu.Lock()	
+			counter++
+			fmt.Println("Visitor Number: ", counter)
+			mu.Unlock()
+			}()
+	}
+	wg.Wait()
+	fmt.Println("Counts:", counter)
+	end := time.Now()
+	fmt.Println("Time taken(diffrence): ", start , end )	
+}
+
+
+func restrauntOrders(){
+	orderChan := make(chan string,1)
+	wg := sync.WaitGroup{}
+	// mu := sync.RWMutex{} 
+
 	
+	
+		listItems := []string{"Apple","Orange","Mango","Lichhi"}
+		for _, val := range listItems {
+			wg.Add(2)
+			go func(){
+				orderChan<-val
+				defer wg.Done()	
+			}()
+
+			// read
+			go func(){
+				res := <- orderChan
+				fmt.Println("Fruit: ", res)	
+				defer wg.Done()	
+			}()
 
 
+		
+		}
+		close(orderChan)
+		wg.Wait()		
 
 }
